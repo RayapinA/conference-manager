@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\User;
 use App\Form\LoginUserType;
 use App\Form\RegisterUserType;
+use App\Manager\SecurityManager;
 use Psr\Log\LoggerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -19,13 +20,13 @@ class SecurityController extends AbstractController
      */
     public function index()
     {
-        $this->redirectToRoute('register');
+        $this->redirectToRoute('home');
     }
 
     /**
      * @Route("/register", name="register")
      */
-    public function register(Request $request, UserPasswordEncoderInterface $passwordEncoder, LoggerInterface $logger )
+    public function register(Request $request, UserPasswordEncoderInterface $passwordEncoder, LoggerInterface $logger, SecurityManager $securityManager )
     {
 
         $user = new User();
@@ -37,13 +38,11 @@ class SecurityController extends AbstractController
             $password = $passwordEncoder->encodePassword($user,$user->getPassword());
             $user->setPassword($password);
 
-            $entityManager = $this->getDoctrine()->getManager();
-            $entityManager->persist($user);
-            $entityManager->flush();
+            $securityManager->save($user);
 
             $logger->info(' New User registered  !!! ');
 
-            return $this->redirectToRoute('register');
+            return $this->redirectToRoute('home');
         }
 
         return $this->render('security/register.html.twig', [
