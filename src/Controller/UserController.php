@@ -2,8 +2,11 @@
 
 namespace App\Controller;
 
+use App\Entity\User;
+use App\Form\UserType;
 use App\Manager\UserManager;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 
 class UserController extends AbstractController
@@ -27,5 +30,26 @@ class UserController extends AbstractController
         return $this->render('user/showAllUser.html.twig', [
             "users" => $users
         ]);
+    }
+
+    /**
+     * @Route("/user/add", name="addUsers")
+     */
+    public function addUser(Request $request,UserManager $userManager){
+
+        $user =  new User();
+
+        $formAddUser = $this->createForm(UserType::class,$user);
+        $formAddUser->handleRequest($request);
+
+        if($formAddUser->isSubmitted() &&  $formAddUser->isValid()){
+
+            $userManager->save($user);
+        }
+
+        return $this->render('user/addUser.html.twig', [
+            'form' => $formAddUser->createView(),
+        ]);
+
     }
 }
