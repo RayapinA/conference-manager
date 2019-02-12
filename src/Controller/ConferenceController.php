@@ -33,7 +33,7 @@ class ConferenceController extends AbstractController
         ]);
     }
     /**
-     * @Route("/conference/add", name="Addconferences")
+     * @Route("/conference/add", name="addConferences")
      */
     public function addConference(Request $request, ConferenceManager $conferenceManager) // LoggerInterface $logger
     {
@@ -47,20 +47,40 @@ class ConferenceController extends AbstractController
         $formAddConference->handleRequest($request);
 
         if($formAddConference->isSubmitted() &&  $formAddConference->isValid()){
-            $conference->setVote(0);
 
+            $conference->setVote(0);
             $conferenceManager->save($conference);
         }
 
         return $this->render('conference/addConference.html.twig', [
             'form' => $formAddConference->createView(),
         ]);
+    }
 
+    /**
+     * @Route("/conference/edit/{id}", name="editVideo")
+     */
+    public function editConference(Request $request, ConferenceManager $conferenceManager, Conference $conference) //,  LoggerInterface $logger
+    {
+        //$this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
 
+        $formEditConference = $this->createForm(ConferenceType::class,$conference);
+        $formEditConference->handleRequest($request);
 
-            //$videoManager->formateYoutubeUrl($video);
-            //$videoManager->save($video);
+        if($formEditConference->isSubmitted() &&  $formEditConference->isValid()){
+            $conferenceManager->save($conference);
 
+            //$this->addFlash(
+             //   'notice',
+               // 'Video Edited'
+          //  );
 
+//            $logger->info('Video Edited. idVideo = '.$video->getId().' title = '.$video->getTitle());
+        }
+
+        return $this->render('conference/editConference.html.twig', [
+            'form' => $formEditConference->createView(),
+            "conference" => $conference
+        ]);
     }
 }
