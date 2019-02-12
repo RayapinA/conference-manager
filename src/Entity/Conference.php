@@ -31,6 +31,11 @@ class Conference
      */
     private $date;
 
+    /**
+     * @ORM\Column(type="integer")
+     */
+    private $vote;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -68,6 +73,18 @@ class Conference
     public function setDate(?\DateTimeInterface $date): self
     {
         $this->date = $date;
+
+        return $this;
+    }
+
+    public function getVote(): ?int
+    {
+        return $this->vote;
+    }
+
+    public function setVote(int $vote): self
+    {
+        $this->vote = $vote;
 
         return $this;
     }

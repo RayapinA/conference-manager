@@ -9,8 +9,8 @@
     </style>
 
     <div class="example-wrapper">
-        {% for conference in conferences %}
-            <li> {{ conference.name|e }} </li>
-        {% endfor %}
+        {{ form_start(form) }}
+        {{ form_widget(form) }}
+        {{ form_end(form) }}
     </div>
 {% endblock %}
