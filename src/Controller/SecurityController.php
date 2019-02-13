@@ -97,8 +97,6 @@ class SecurityController extends AbstractController
                 array_push($conferenceNoVoted,$conference);
             }
         }
-        //dump($conferenceVoted);
-        //dump($conferenceNoVoted);
 
         return $this->render('security/profile.html.twig',[
             "conferencevoted" => $conferenceVoted,

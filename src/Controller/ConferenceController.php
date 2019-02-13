@@ -112,4 +112,31 @@ class ConferenceController extends AbstractController
 
         return $this->redirectToRoute('profile');
     }
+
+    /**
+     * @Route("/conference/conferencesVoted", name="conferencesVoted")
+     */
+    public function pageVoted(Request $request, ConferenceManager $conferenceManager)
+    {
+
+        $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
+
+        $conferences = $conferenceManager->getConferenceVotedByUser($this->getUser());
+        dump($conferences);exit();
+    }
+
+    /**
+     * @Route("/conference/conferencesNoVoted", name="conferencesNoVoted")
+     */
+    public function pageNoVoted(ConferenceManager $conferenceManager)
+    {
+
+        $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
+
+        $conferences = $conferenceManager->getConferenceNoVotedByUser($this->getUser());
+        dump($conferences);exit();
+        //conference faire function conferenceVoted qui prend en parametre un id user et requete si cette id user est present pour cette conference
+
+
+    }
 }
