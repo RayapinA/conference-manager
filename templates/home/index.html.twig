@@ -1,12 +1,12 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Hello HomeController!{% endblock %}
+{% block title %} Home Page {% endblock %}
 
 {% block body %}
 
 <div class="example-wrapper">
 
-        Conferences
+        Liste des Conferences
     {% for conference in conferences %}
         <li> {{ conference.name }}
             {% for i in 1 .. NbEtoile %}
@@ -16,5 +16,8 @@
         </li>
     {% endfor %}
 
+        <div class="navigation">
+                {{ knp_pagination_render(conferences) }}
+        </div>
 </div>
 {% endblock %}
