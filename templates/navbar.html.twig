@@ -5,6 +5,12 @@
         {% if is_granted('IS_AUTHENTICATED_FULLY') %}
             <a href="{{ path("conferencesVoted")}}"> Conferences Voted </a>
             <a href="{{ path("conferencesNoVoted")}}"> Conferences No Voted </a>
+
+            {% if is_granted('ROLE_ADMIN') != false %}
+                <a href="{{ path("admin")}}"> Admin </a>
+            {% else %}
+                <a href="{{ path("profile")}}"> Profile </a>
+            {% endif %}
             <a href="{{ path("logout")}}"> logout </a>
 
         {% else %}

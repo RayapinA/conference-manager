@@ -19,11 +19,10 @@ class HomeController extends Controller
 
         $paginator = $this->get('knp_paginator');
 
-        // Paginate the results of the query
         $conferences = $paginator->paginate(
             $conferencesQuery,
             $request->query->getInt('page', 1),
-            5
+            Conference::NB_CONF_PER_PAGE
         );
 
         return $this->render('home/index.html.twig', [

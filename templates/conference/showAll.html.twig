@@ -5,13 +5,21 @@
 {% block body %}
 
     <div class="example-wrapper">
+        <h3> Conference's List : </h3>
+        <ul class="listConference">
         {% for conference in conferences %} 
-            <li> {{ conference.name }}  
-            {% for i in 1 .. NbEtoile %}
-            
-                <a href="{{ path("oneVote",{'id':conference.id,'nbre':i }) }}"> <i class="material-icons">star_border</i> </a> 
-            {% endfor %}
+            <li> {{ conference.name }}
+            {% if NbEtoile is defined %}
+                {% for i in 1 .. NbEtoile %}
+
+                    <a href="{{ path("oneVote",{'id':conference.id,'nbre':i }) }}"> <i class="material-icons">star_border</i> </a>
+                {% endfor %}
+            {% endif %}
             </li>
         {% endfor %}
+        </ul>
+        <div class="navigation">
+            {{ knp_pagination_render(conferences) }}
+        </div>
     </div>
 {% endblock %}

@@ -43,6 +43,7 @@ class Conference
      */
     private $users;
     Const NB_ETOILE =  5;
+    Const NB_CONF_PER_PAGE = 5;
 
     public function __construct()
     {
