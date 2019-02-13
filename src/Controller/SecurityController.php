@@ -2,9 +2,11 @@
 
 namespace App\Controller;
 
+use App\Entity\Conference;
 use App\Entity\User;
 use App\Form\LoginUserType;
 use App\Form\RegisterUserType;
+use App\Manager\ConferenceManager;
 use App\Manager\SecurityManager;
 use Psr\Log\LoggerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -77,10 +79,43 @@ class SecurityController extends AbstractController
     /**
      * @Route("/profile", name="profile")
      */
-    public function profile()
+    public function profile(ConferenceManager $conferenceManager)
     {
-        return $this->render('security/profile.html.twig');
+        $conferenceVoted = array();
+        $conferenceNoVoted = array();
+
+        $conferences = $conferenceManager->getAllConferences();
+
+        $user = $this->getUser();
+        $conferenceAlreadyVoted = $user->getIdConferenceVoted();
+
+        foreach($conferences as $conference){
+
+            if(in_array($conference->getId(),$conferenceAlreadyVoted)){
+                array_push($conferenceVoted,$conference);
+            }else{
+                array_push($conferenceNoVoted,$conference);
+            }
+        }
+        //dump($conferenceVoted);
+        //dump($conferenceNoVoted);
+
+        return $this->render('security/profile.html.twig',[
+            "conferencevoted" => $conferenceVoted,
+            "conferenceNoVoted" => $conferenceNoVoted,
+            "NbEtoile" => conference::NB_ETOILE
+        ]);
     }
+
+    /**
+     * @Route("/logout", name="logout")
+     */
+    public function logout()
+    {
+        return $this->redirectToRoute('home');
+    }
+
+
 
 
 }

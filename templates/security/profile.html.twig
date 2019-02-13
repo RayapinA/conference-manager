@@ -9,4 +9,21 @@
         <li> {{app.user.email}} </li>
     </ul>
 
+    <u> Conference Already Voted </u>
+    {% for conference in conferencevoted %}
+        <li> {{ conference.name }}
+        </li>
+    {% endfor %}
+
+    <u>Conference no Voted </u>
+
+    {% for conference in conferenceNoVoted %}
+        <li> {{ conference.name }}
+            {% for i in 1 .. NbEtoile %}
+
+                <a href="{{ path("oneVote",{'id':conference.id,'nbre':i }) }}"> <i class="material-icons">star_border</i> </a>
+            {% endfor %}
+        </li>
+    {% endfor %}
+
 {% endblock %}

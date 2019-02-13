@@ -11,6 +11,7 @@ use Symfony\Component\HttpFoundation\Request;
 
 class ConferenceController extends AbstractController
 {
+
     /**
      * @Route("/conference", name="conference")
      */
@@ -29,7 +30,8 @@ class ConferenceController extends AbstractController
         $conferences = $conferenceManager->getAllConferences();
 
         return $this->render('conference/showAll.html.twig', [
-            'conferences' => $conferences
+            'conferences' => $conferences,
+            'NbEtoile' => conference::NB_ETOILE
         ]);
     }
     /**
@@ -82,5 +84,32 @@ class ConferenceController extends AbstractController
             'form' => $formEditConference->createView(),
             "conference" => $conference
         ]);
+    }
+
+    /**
+     * @Route("/conference/oneVote/{id}", name="oneVote")
+     */
+    public function oneVote(Conference $conference,Request $request, ConferenceManager $conferenceManager)
+    {
+
+        $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
+
+        $user = $this->getUser();
+        $conferenceAlreadyVoted = $user->getIdConferenceVoted();
+
+        if(in_array($conference->getId(),$conferenceAlreadyVoted)){
+
+            return $this->redirectToRoute('profile');
+
+        }
+
+        $nbVote = $conference->getVote();
+        $newNbVote = $nbVote + $_GET['nbre']; // Securiser HtmlSpecial Caract
+        $conference->setVote($newNbVote);
+        $conference->addUser($user);
+
+        $conferenceManager->save($conference);
+
+        return $this->redirectToRoute('profile');
     }
 }
