@@ -2,6 +2,8 @@
 
 namespace App\Controller;
 
+use App\Entity\Conference;
+use App\Manager\ConferenceManager;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Routing\Annotation\Route;
 
@@ -10,10 +12,14 @@ class HomeController extends AbstractController
     /**
      * @Route("/", name="home")
      */
-    public function index()
+    public function index(ConferenceManager $conferenceManager)
     {
+        $conferences = $conferenceManager->getAllConferences();
+
         return $this->render('home/index.html.twig', [
-            'controller_name' => 'HomeController',
+            'conferences' => $conferences,
+            "NbEtoile" => conference::NB_ETOILE
+
         ]);
     }
 }

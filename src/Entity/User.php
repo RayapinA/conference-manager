@@ -2,6 +2,8 @@
 
 namespace App\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\UserInterface;
 
@@ -41,9 +43,16 @@ class User implements UserInterface
      */
     private $roles = [];
 
+    /**
+     * @ORM\ManyToMany(targetEntity="App\Entity\Conference", inversedBy="users")
+     */
+    private $conference;
+
+
     public function __construct()
     {
         $this->roles = array("ROLE_USER");
+        $this->conference = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -123,4 +132,43 @@ class User implements UserInterface
 
         return $this;
     }
+
+    /**
+     * @return Collection|Conference[]
+     */
+    public function getConference(): Collection
+    {
+        return $this->conference;
+    }
+
+    public function addConference(Conference $conference): self
+    {
+        if (!$this->conference->contains($conference)) {
+            $this->conference[] = $conference;
+        }
+
+        return $this;
+    }
+
+    public function removeConference(Conference $conference): self
+    {
+        if ($this->conference->contains($conference)) {
+            $this->conference->removeElement($conference);
+        }
+
+        return $this;
+    }
+
+    public function getIdConferenceVoted(): Array
+    {
+        $arrayIdVoted = array();
+        $conferencesVoted = $this->getConference();
+        foreach($conferencesVoted as $conferenceVoted){
+            array_push($arrayIdVoted, $conferenceVoted->getId());
+
+        }
+        return $arrayIdVoted;
+    }
+
+
 }
