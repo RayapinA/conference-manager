@@ -11,7 +11,7 @@
         <form id="form_recherche" action="{{ path('resultSearchConference') }}" method="post">
 
 
-            {{ form_label(form.name, 'Name (4 caract min) : ') }}
+            {{ form_label(form.name, 'Nom de la conférence: ') }}
             {{ form_errors(form.name) }}
             {{ form_widget(form.name, {'attr': {'class': 'inputField','id':'nameSearchConference'}}) }}
             {{ form_help(form.name) }}
@@ -19,7 +19,7 @@
             {{ form_widget(form.submit, {'attr': {'class': 'boutonSubmit'}}) }}
 
         </form>
-        <hr>
+
         <div id="printResult"> </div>
 
 
@@ -33,16 +33,18 @@
         $("#form_recherche").submit(function(){
            var nameSearched =  $("#search_conference_name").val();
 
-            var DATA = 'nameSearched=' + nameSearched;
+            var data = 'nameSearched=' + nameSearched;
             $.ajax({
                 type: "POST",
                 url: "{{ path('resultSearchConference')}}",
-                data: DATA,
+                data: data,
                 cache: false,
                 success: function(data){
 
                     if(data.length > 0){
-                        var affichage = "<table>  <tr> <th> ID  </th>  <th> Name </th> </tr>";
+                        //TODO: Faire le template dans le controlleur avec le service de Temaplating
+                        var affichage = "<hr>";
+                        affichage += "<table id='resultTable'>  <tr> <th> ID  </th>  <th> Name </th> </tr>";
                         for (var prop in data) {
 
                             affichage += "<tr> <td> " + data[prop].id + " </td>   <td> " + data[prop].name + " </td> </tr>";
@@ -55,6 +57,8 @@
                     }else{
                         $("#printResult")[0].innerHTML = "Aucune conference ne correspond à votre recherche";
                     }
+
+
                     return false;
                 }
             });

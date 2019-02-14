@@ -1,10 +1,12 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Hello ConferenceController!{% endblock %}
+{% block title %} Conference {% endblock %}
 
 {% block body %}
 
     <div class="example-wrapper">
+
+        <a href="{{ path("searchConference") }}"> <button> Rechercher une Conference </button></a>
         <h3> Conference's List : </h3>
         <ul class="listConference">
         {% for conference in conferences %} 

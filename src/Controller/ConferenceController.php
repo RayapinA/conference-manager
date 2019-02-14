@@ -200,11 +200,12 @@ class ConferenceController extends Controller
 
             $nameSearched = $request->request->get('nameSearched');
 
-            // mettre condition
-
+            if($nameSearched == ""){
+                //securité supplémentaire
+                return $this->json(array());
+            }
             $conferencesFind = $conferenceManager->getSearchResult($nameSearched);
 
-            $conferencesFind = $conferencesFind;
             return $this->json($conferencesFind);
         }
     }

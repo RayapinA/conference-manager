@@ -74,7 +74,7 @@ class ConferenceManager extends AbstractController
         return $this->conferenceRepository->findby(array(),array('vote'=>'desc'),10);
     }
 
-    public function getSearchResult($nameSearched)
+    public function getSearchResult($nameSearched): array
     {
 
         $query = $this->conferenceRepository->createQueryBuilder('c')
