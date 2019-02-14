@@ -67,6 +67,10 @@ class ConferenceManager extends AbstractController
         }
         return $arrayConferenceVoted;
     }
+    public function getTopTenConference()
+    {
+        return $this->conferenceRepository->findby(array(),array('vote'=>'desc'),10);
+    }
 
     public function save(Conference $conference)
     {

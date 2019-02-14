@@ -5,7 +5,25 @@
 {% block body %}
     <div class="example-wrapper">
 
-        <a href="{{ path("adminConference")}}"><button>   Gestion des conférences  </button></a>
-        <a href="{{ path("adminUser")}}"><button>  Gestion des utilisateurs  </button></a>
+        <div id="button_panel">
+            <a href="{{ path("adminConference")}}"><button>   Gestion des conférences  </button></a>
+            <a href="{{ path("adminUser")}}"><button>  Gestion des utilisateurs  </button></a>
+        </div>
+
+        <div>
+            <h3> TOP 10 des conférences </h3>
+
+            <ul class="listConference">
+                {% for conference in conferences %}
+                <li>
+                    {{ conference.name }}
+                            --
+                    {{ conference.vote }}
+                </li>
+                {% endfor %}
+            </ul>
+
+        </div>
+
     </div>
 {% endblock %}

@@ -4,6 +4,7 @@ namespace App\Form;
 
 use App\Entity\Conference;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\DateTimeType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -15,7 +16,7 @@ class ConferenceType extends AbstractType
         $builder
             ->add('name')
             ->add('place')
-            ->add('date')
+            ->add('date',DateTimeType::class)
             ->add('submit',SubmitType::class)
         ;
     }
