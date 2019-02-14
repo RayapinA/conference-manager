@@ -67,10 +67,24 @@ class ConferenceManager extends AbstractController
         }
         return $arrayConferenceVoted;
     }
+
+
     public function getTopTenConference()
     {
         return $this->conferenceRepository->findby(array(),array('vote'=>'desc'),10);
     }
+
+    public function getSearchResult($nameSearched)
+    {
+
+        $query = $this->conferenceRepository->createQueryBuilder('c')
+            ->select('c.name,c.id')
+            ->where('c.name LIKE :nameSearched')
+            ->setParameter('nameSearched' , '%'.$nameSearched.'%')->getQuery();
+
+        return $query->getResult();
+    }
+
 
     public function save(Conference $conference)
     {

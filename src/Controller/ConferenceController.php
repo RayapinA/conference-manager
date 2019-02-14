@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\Conference;
 use App\Form\ConferenceType;
+use App\Form\SearchConferenceType;
 use App\Manager\ConferenceManager;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -27,9 +28,18 @@ class ConferenceController extends Controller
     /**
      * @Route("/conferences", name="conferences")
      */
-    public function showAllConference(ConferenceManager $conferenceManager)
+    public function showAllConference(ConferenceManager $conferenceManager, Request $request)
     {
-        $conferences = $conferenceManager->getAllConferences();
+        $conferencesQuery = $conferenceManager->getAllConferences();
+
+        $paginator = $this->get('knp_paginator');
+
+        $conferences = $paginator->paginate(
+            $conferencesQuery,
+            $request->query->getInt('page', 1),
+            Conference::NB_CONF_PER_PAGE
+        );
+
 
         return $this->render('conference/showAll.html.twig', [
             'conferences' => $conferences,
@@ -163,4 +173,40 @@ class ConferenceController extends Controller
         ]);
 
     }
+
+    /**
+     * @Route("/conference/search", name="searchConference")
+     */
+    public function searchConference(Request $request)
+    {
+
+        $conference = new Conference;
+
+        $formSearchConference = $this->createForm(SearchConferenceType::class,$conference);
+
+        return $this->render('conference/searchConference.html.twig', [
+            'form' => $formSearchConference->createView(),
+            "conference" => $conference
+        ]);
+    }
+
+
+    /**
+     * @Route("/conference/resultSearch", name="resultSearchConference")
+     */
+    public function resultSearchConference(Request $request, ConferenceManager $conferenceManager)
+    {
+        if($request->isXmlHttpRequest()){
+
+            $nameSearched = $request->request->get('nameSearched');
+
+            // mettre condition
+
+            $conferencesFind = $conferenceManager->getSearchResult($nameSearched);
+
+            $conferencesFind = $conferencesFind;
+            return $this->json($conferencesFind);
+        }
+    }
+
 }

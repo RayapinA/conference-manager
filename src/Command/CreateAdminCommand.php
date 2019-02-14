@@ -47,7 +47,7 @@ class CreateAdminCommand extends Command
         $user->setEmail($email);
         $passwordEncoded = $this->encoder->encodePassword($user, $password);
         $user->setPassword($passwordEncoded);
-        $user->setRoles(['ROLE_USER','ROLE_ADMIN']);
+        $user->setRoles(['ROLE_ADMIN','ROLE_USER']);
         $user->setName('LastName_Admin');
         $user->setFirstName('FirstName_Admin');
 
