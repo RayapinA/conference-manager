@@ -6,6 +6,7 @@ use App\Entity\Conference;
 use App\Form\ConferenceType;
 use App\Form\SearchConferenceType;
 use App\Manager\ConferenceManager;
+use App\Manager\UserManager;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Routing\Annotation\Route;
@@ -48,7 +49,7 @@ class ConferenceController extends Controller
     /**
      * @Route("/conference/add", name="addConferences")
      */
-    public function addConference(Request $request, ConferenceManager $conferenceManager) // LoggerInterface $logger
+    public function addConference(Request $request, ConferenceManager $conferenceManager, \Swift_Mailer $mailer, UserManager $userManager) // LoggerInterface $logger
     {
         // Possibilité d'ajouter uniquement si l'utilisateur est connecté //Fonction a mettre en place // Logger la creation
 
@@ -63,6 +64,22 @@ class ConferenceController extends Controller
 
             $conference->setVote(0);
             $conferenceManager->save($conference);
+
+            //ENVOI DES MAILS
+            // J'ai utilisé Mailinator
+            $users = $userManager->getAllUser();
+            foreach($users as $user){
+
+                $message = (new \Swift_Message('New Conference '))
+                    ->setFrom('anoinegwada@gmail.com')
+                    ->setTo(trim($user->getEmail()))
+                    ->setBody("New conference",
+                        'text/html'
+                    );
+
+                $mailer->send($message);
+            }
+
         }
 
         return $this->render('conference/addConference.html.twig', [
