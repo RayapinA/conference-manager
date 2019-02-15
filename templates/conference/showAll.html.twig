@@ -14,7 +14,7 @@
             {% if NbEtoile is defined %}
                 {% for i in 1 .. NbEtoile %}
 
-                    <a href="{{ path("oneVote",{'id':conference.id,'nbre':i }) }}"> <i class="material-icons">star_border</i> </a>
+                    <a href="{{ path("oneVote",{'id':conference.id,'nbre':i }) }}" class="etoile-{{ conference.id }}-{{ i }}"> <i class="material-icons star">star_border</i> </a>
                 {% endfor %}
             {% endif %}
             </li>
@@ -24,4 +24,20 @@
             {{ knp_pagination_render(conferences) }}
         </div>
     </div>
+{% endblock %}
+
+{% block script_javascripts  %}
+    <script>
+        //TODO: A developper plus tard
+    $(".star").hover(function(){
+        var classLigne = this.parentNode.className;
+        var ligneSplit = classLigne.split('-');
+
+        for(var i = 1; i <= ligneSplit[2]; i++){
+            //var nomclass = ligneSplit[0] + "-" + ligneSplit[1]+ "-" + i ;
+            //$(nomclass).innerHTML = "<i class=\'material-icons star\'>star</i>";
+        }
+    })
+
+    </script>
 {% endblock %}

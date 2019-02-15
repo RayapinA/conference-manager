@@ -9,7 +9,30 @@
         <h3> Page register </h3>
 
         {{ form_start(form) }}
-        {{ form_widget(form) }}
+
+        {{ form_label(form.email, 'Email : ') }}
+        {{ form_errors(form.email) }}
+        {{ form_widget(form.email, {'attr': {'class': 'inputField'}}) }}
+        {{ form_help(form.email) }}
+
+
+        {{ form_errors(form.password) }}
+        {{ form_widget(form.password, {'attr': {'class': 'inputField'}}) }}
+        {{ form_help(form.password) }}
+
+        {{ form_label(form.name, 'Name : ') }}
+        {{ form_errors(form.name) }}
+        {{ form_widget(form.name, {'attr': {'class': 'inputField'}}) }}
+        {{ form_help(form.name) }}
+
+        {{ form_label(form.firstName, 'Firstname : ') }}
+        {{ form_errors(form.firstName) }}
+        {{ form_widget(form.firstName, {'attr': {'class': 'inputField'}}) }}
+        {{ form_help(form.firstName) }}
+
+        {{ form_widget(form.submit, {'attr': {'class': 'boutonSubmit'}}) }}
+
+
         {{ form_end(form) }}
 
     </div>
