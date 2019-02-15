@@ -143,6 +143,7 @@ class ConferenceController extends Controller
         $conference->addUser($user);
 
         $conferenceManager->save($conference);
+        $this->addFlash('success', 'Thanks for your vote ! and See you at the conference maybe');
 
         return $this->redirectToRoute('profile');
     }

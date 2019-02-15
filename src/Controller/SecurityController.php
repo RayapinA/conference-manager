@@ -42,9 +42,11 @@ class SecurityController extends AbstractController
 
             $securityManager->save($user);
 
+            $this->addFlash('success', 'Sign up to vote right now');
+
             $logger->info(' New User registered  !!! ');
 
-            return $this->redirectToRoute('home');
+            return $this->redirectToRoute('login');
         }
 
         return $this->render('security/register.html.twig', [
