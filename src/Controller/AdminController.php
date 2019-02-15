@@ -15,7 +15,6 @@ class AdminController extends AbstractController
     public function index(ConferenceManager $conferenceManager)
     {
         $this->denyAccessUnlessGranted('ROLE_ADMIN', null, 'User tried to access a page without having ROLE_ADMIN');
-
         $conference = $conferenceManager->getTopTenConference();
 
         return $this->render('admin/index.html.twig', [

@@ -18,7 +18,6 @@ class HomeController extends Controller
         $conferencesQuery = $conferenceManager->getAllConferences();
 
         $paginator = $this->get('knp_paginator');
-
         $conferences = $paginator->paginate(
             $conferencesQuery,
             $request->query->getInt('page', 1),

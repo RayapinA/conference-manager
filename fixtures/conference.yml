@@ -3,6 +3,6 @@ App\Entity\Conference:
     name: <firstName()>
     place: <city()>
     date: <dateTimeBetween('+12 days','+1 month')>
-    vote: 0
+    vote: <numberBetween(1, 20)>
     description: <firstName()>
 

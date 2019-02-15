@@ -31,7 +31,7 @@
     <script>
 
         $("#form_recherche").submit(function(){
-           var nameSearched =  $("#search_conference_name").val();
+            var nameSearched =  $("#search_conference_name").val();
 
             var data = 'nameSearched=' + nameSearched;
             $.ajax({
@@ -42,7 +42,7 @@
                 success: function(data){
 
                     if(data.length > 0){
-                        //TODO: Faire le template dans le controlleur avec le service de Temaplating
+                        //TODO: Faire le template dans le controleur avec le service de Templating
                         var affichage = "<hr>";
                         affichage += "<table id='resultTable'>  <tr> <th> ID  </th>  <th> Name </th> </tr>";
                         for (var prop in data) {

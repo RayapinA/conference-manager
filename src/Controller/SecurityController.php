@@ -43,7 +43,6 @@ class SecurityController extends AbstractController
             $securityManager->save($user);
 
             $this->addFlash('success', 'Sign up to vote right now');
-
             $logger->info(' New User registered  !!! ');
 
             return $this->redirectToRoute('login');

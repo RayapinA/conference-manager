@@ -34,13 +34,12 @@ class ConferenceController extends Controller
         $conferencesQuery = $conferenceManager->getAllConferences();
 
         $paginator = $this->get('knp_paginator');
-
         $conferences = $paginator->paginate(
             $conferencesQuery,
             $request->query->getInt('page', 1),
             Conference::NB_CONF_PER_PAGE
-
         );
+
         return $this->render('conference/showAll.html.twig', [
             'conferences' => $conferences,
             "NbEtoile" => conference::NB_ETOILE,
@@ -63,7 +62,7 @@ class ConferenceController extends Controller
             $conference->setVote(0);
             $conferenceManager->save($conference);
 
-            //TODO: enregistrer les donnes de cette ajout de conference
+            //TODO: Enregistrer les données de cette ajout de conférence
             $logger->info(' Conference Added!!! ');
             $this->addFlash('success', 'Conference created');
 
@@ -108,7 +107,7 @@ class ConferenceController extends Controller
                 'notice',
                 'Conference Edited'
            );
-            //TODO: enregister les informations de cette conference
+            //TODO: enregister les informations de cette conférence
            $logger->info('Conference Edited');
         }
 
@@ -129,7 +128,7 @@ class ConferenceController extends Controller
         $user = $this->getUser();
         $conferenceAlreadyVoted = $user->getIdConferenceVoted();
 
-        //Si un utilisateur a deja vote pour la conference en cours on le redirige vers son profil
+        //Si un utilisateur à déjà vote pour la conférence en cours on le redirige vers son profil
         if(in_array($conference->getId(),$conferenceAlreadyVoted)){
 
             return $this->redirectToRoute('profile');
@@ -137,7 +136,7 @@ class ConferenceController extends Controller
         }
 
         $nbVote = $conference->getVote();
-        $newNbVote = $nbVote + $_GET['nbre']; // Securiser HtmlSpecial Caract
+        $newNbVote = $nbVote + $_GET['nbre'];
         $conference->setVote($newNbVote);
         $conference->addUser($user);
 
@@ -160,7 +159,6 @@ class ConferenceController extends Controller
         $conferencesQuery = $conferenceManager->getConferenceVotedByUser($this->getUser());
 
         $paginator = $this->get('knp_paginator');
-
         $conferences = $paginator->paginate(
             $conferencesQuery,
             $request->query->getInt('page', 1),
@@ -183,7 +181,6 @@ class ConferenceController extends Controller
         $conferencesQuery = $conferenceManager->getConferenceNoVotedByUser($this->getUser());
 
         $paginator = $this->get('knp_paginator');
-
         $conferences = $paginator->paginate(
             $conferencesQuery,
             $request->query->getInt('page', 1),

@@ -26,18 +26,4 @@
     </div>
 {% endblock %}
 
-{% block script_javascripts  %}
-    <script>
-        //TODO: A developper plus tard
-    $(".star").hover(function(){
-        var classLigne = this.parentNode.className;
-        var ligneSplit = classLigne.split('-');
 
-        for(var i = 1; i <= ligneSplit[2]; i++){
-            //var nomclass = ligneSplit[0] + "-" + ligneSplit[1]+ "-" + i ;
-            //$(nomclass).innerHTML = "<i class=\'material-icons star\'>star</i>";
-        }
-    })
-
-    </script>
-{% endblock %}
