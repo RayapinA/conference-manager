@@ -45,6 +45,12 @@ You can open a terminal with this command :
 docker-compose exec web bash
 ```
 
+To update the doctrine schema, make this command :
+```bash
+php bin/console d:s:u --force
+```
+
+
 Command to create a admin :  **app:create-admin**
 
 ```bash
