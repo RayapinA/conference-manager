@@ -57,7 +57,7 @@ class SecurityController extends AbstractController
     /**
      * @Route("/login", name="login")
      */
-    public function login(AuthenticationUtils $authenticationUtils)
+    public function login(AuthenticationUtils $authenticationUtils,LoggerInterface $logger)
     {
 
         $user = new User();
@@ -65,12 +65,13 @@ class SecurityController extends AbstractController
         $form = $this->createForm(LoginUserType::class,$user);
 
         if(!empty($authenticationUtils->getLastAuthenticationError())){
-            //$this->addFlash(
-              //  'notice',
-            //    'Erreur de connexion'
-          //  );
+            $this->addFlash(
+                'notice',
+               'Erreur de connexion'
+            );
         }
-
+        //TODO: Enregistrer l'identité de la connexion
+        $logger->info(' New Connection !!! ');
 
         return $this->render('security/login.html.twig', [
             'error' => $authenticationUtils->getLastAuthenticationError(),
@@ -111,8 +112,10 @@ class SecurityController extends AbstractController
     /**
      * @Route("/logout", name="logout")
      */
-    public function logout()
+    public function logout(LoggerInterface $logger)
     {
+        //TODO: enregistrer l'identite de la connexion
+        $logger->info(' Deconnection!!! ');
         return $this->redirectToRoute('home');
     }
 

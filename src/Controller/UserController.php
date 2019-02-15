@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\User;
 use App\Form\UserType;
 use App\Manager\UserManager;
+use Psr\Log\LoggerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
@@ -56,6 +57,8 @@ class UserController extends AbstractController
         if($formAddUser->isSubmitted() &&  $formAddUser->isValid()){
 
             $userManager->save($user);
+            $this->addFlash('success', 'User added');
+
         }
 
         return $this->render('user/addUser.html.twig', [
@@ -67,7 +70,7 @@ class UserController extends AbstractController
     /**
      * @Route("/user/edit/{id}", name="editUsers")
      */
-    public function editUser(Request $request,UserManager $userManager,User $user,UserPasswordEncoderInterface $passwordEncoder)
+    public function editUser(Request $request,UserManager $userManager,User $user,UserPasswordEncoderInterface $passwordEncoder,LoggerInterface $logger)
     {
 
 
@@ -84,6 +87,14 @@ class UserController extends AbstractController
             }
 
             $userManager->save($user);
+            $this->addFlash('success', 'User edited');
+            $this->addFlash(
+                'success',
+                'Erreur de connexion'
+            );
+            //TODO: enregistrer les infos
+            $logger->info(' User Edited!!! ');
+
         }
 
         return $this->render('user/editUser.html.twig', [
