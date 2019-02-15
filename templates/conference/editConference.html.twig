@@ -1,13 +1,16 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}PAGE EDIT {% endblock %}
+{% block title %}Page edit{% endblock %}
 
 {% block body %}
 
-    PAGE EDIT
+
     <div class="example-wrapper">
+        <h3> Page edit</h3>
+
         {{ form_start(form) }}
         {{ form_widget(form) }}
         {{ form_end(form) }}
+
     </div>
 {% endblock %}

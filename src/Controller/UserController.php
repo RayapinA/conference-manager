@@ -8,6 +8,7 @@ use App\Manager\UserManager;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
 class UserController extends AbstractController
 {
@@ -16,28 +17,35 @@ class UserController extends AbstractController
      */
     public function index()
     {
-        return $this->render('user/index.html.twig', [
-            'controller_name' => 'UserController',
-        ]);
+        return $this->redirectToRoute('home');
     }
     /**
      * @Route("/users", name="users")
      */
-    public function showAllUsers(UserManager $userManager)
+    public function showAllUsers(UserManager $userManager,AuthorizationCheckerInterface $authChecker)
     {
 
-        $users =  $userManager->getAllUser();
+        if (false === $authChecker->isGranted('ROLE_ADMIN')) {
+            return $this->redirectToRoute('home');
+        }
+        //$users =  $userManager->getAllUser();
 
-        return $this->render('user/showAllUser.html.twig', [
-            "users" => $users
-        ]);
+        //return $this->render('user/showAllUser.html.twig', [
+          //  "users" => $users
+        //]);
+
+        return $this->redirectToRoute('adminUser');
     }
 
     /**
      * @Route("/user/add", name="addUsers")
      */
-    public function addUser(Request $request,UserManager $userManager)
+    public function addUser(Request $request,UserManager $userManager,AuthorizationCheckerInterface $authChecker)
     {
+
+        if (false === $authChecker->isGranted('ROLE_ADMIN')) {
+            return $this->redirectToRoute('home');
+        }
 
         $user =  new User();
 

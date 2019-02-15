@@ -6,12 +6,12 @@
     <div class="example-wrapper">
 
         <div id="button_panel">
-            <a href="{{ path("adminConference")}}"><button>   Gestion des conférences  </button></a>
-            <a href="{{ path("adminUser")}}"><button>  Gestion des utilisateurs  </button></a>
+            <a href="{{ path("adminConference")}}"><button>  Conferences Manager  </button></a>
+            <a href="{{ path("adminUser")}}"><button>  User Manager </button></a>
         </div>
 
         <div>
-            <h3> TOP 10 des conférences </h3>
+            <h3> TOP 10 of conferences </h3>
 
             <ul class="listConference">
                 {% for conference in conferences %}

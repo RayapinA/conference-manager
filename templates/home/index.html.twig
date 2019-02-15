@@ -5,8 +5,10 @@
 {% block body %}
 
 <div class="example-wrapper">
-Home Page
-        Liste des Conferences
+
+        <h2>Home Page</h2>
+
+        <h3>Conference's list</h3>
     {% for conference in conferences %}
         <li> {{ conference.name }}
             {% for i in 1 .. NbEtoile %}

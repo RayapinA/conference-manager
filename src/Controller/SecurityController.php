@@ -81,6 +81,7 @@ class SecurityController extends AbstractController
      */
     public function profile(ConferenceManager $conferenceManager)
     {
+        
         $conferenceVoted = array();
         $conferenceNoVoted = array();
 

@@ -10,6 +10,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
 //Controlleur deprecié mais j'ai besoin du service knp_paginator
 class ConferenceController extends Controller
@@ -20,9 +21,8 @@ class ConferenceController extends Controller
      */
     public function index()
     {
-        return $this->render('conference/index.html.twig', [
-            'controller_name' => 'ConferenceController',
-        ]);
+        return $this->redirectToRoute('home');
+
     }
 
     /**
@@ -73,10 +73,12 @@ class ConferenceController extends Controller
     /**
      * @Route("/conference/edit/{id}", name="editConference")
      */
-    public function editConference(Request $request, ConferenceManager $conferenceManager, Conference $conference) //,  LoggerInterface $logger
+    public function editConference(Request $request, ConferenceManager $conferenceManager, Conference $conference, AuthorizationCheckerInterface $authChecker) //,  LoggerInterface $logger
     {
         //Seul l'admin peut modifier une conference ( pour la date & le lieu )
-        $this->denyAccessUnlessGranted('ROLE_ADMIN');
+        if (false === $authChecker->isGranted('ROLE_ADMIN')) {
+            return $this->redirectToRoute('home');
+        }
 
         $formEditConference = $this->createForm(ConferenceType::class,$conference);
         $formEditConference->handleRequest($request);

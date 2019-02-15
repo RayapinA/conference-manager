@@ -7,11 +7,11 @@
 
     <div class="example-wrapper">
 
-        Page de recherche
+        Search conference's Engine
         <form id="form_recherche" action="{{ path('resultSearchConference') }}" method="post">
 
 
-            {{ form_label(form.name, 'Nom de la conférence: ') }}
+            {{ form_label(form.name, 'Name of the conference: ') }}
             {{ form_errors(form.name) }}
             {{ form_widget(form.name, {'attr': {'class': 'inputField','id':'nameSearchConference'}}) }}
             {{ form_help(form.name) }}
@@ -55,7 +55,7 @@
 
                         $("#printResult")[0].innerHTML = affichage;
                     }else{
-                        $("#printResult")[0].innerHTML = "Aucune conference ne correspond à votre recherche";
+                        $("#printResult")[0].innerHTML = "Sorry, no conference matching with the name you are looking for";
                     }
 
 
