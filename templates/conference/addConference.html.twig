@@ -6,8 +6,32 @@
 
     <div class="example-wrapper">
         <h3> Add conference's page</h3>
+
         {{ form_start(form) }}
-        {{ form_widget(form) }}
+
+        {{ form_label(form.name, 'Name * : ') }}
+        {{ form_errors(form.name) }}
+        {{ form_widget(form.name, {'attr': {'class': 'inputField'}}) }}
+        {{ form_help(form.name) }}
+
+        {{ form_label(form.place, 'Place  : ') }}
+        {{ form_errors(form.place) }}
+        {{ form_widget(form.place, {'attr': {'class': 'inputField'}}) }}
+        {{ form_help(form.place) }}
+
+        {{ form_label(form.description, 'Description : ') }}
+        {{ form_errors(form.description) }}
+        {{ form_widget(form.description, {'attr': {'class': 'inputField'}}) }}
+        {{ form_help(form.description) }}
+
+        {{ form_label(form.date, 'Date : ') }}
+        {{ form_errors(form.date) }}
+        {{ form_widget(form.date, {'attr': {'class': 'inputField'}}) }}
+        {{ form_help(form.date) }}
+
+        {{ form_widget(form.submit, {'attr': {'class': 'boutonSubmit'}}) }}
+
+
         {{ form_end(form) }}
 
     </div>
