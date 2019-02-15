@@ -39,11 +39,13 @@ class ConferenceController extends Controller
             $conferencesQuery,
             $request->query->getInt('page', 1),
             Conference::NB_CONF_PER_PAGE
+
         );
 
 
         return $this->render('conference/showAll.html.twig', [
             'conferences' => $conferences,
+            "NbEtoile" => conference::NB_ETOILE,
         ]);
     }
     /**

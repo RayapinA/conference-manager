@@ -1,0 +1,8 @@
+App\Entity\Conference:
+  conference_{1..10}:
+    name: <firstName()>
+    place: <city()>
+    date: <dateTimeBetween('+12 days','+1 month')>
+    vote: 0
+    description: <firstName()>
+
