@@ -11,6 +11,8 @@
             <li> Email : {{app.user.email}} </li>
         </ul>
 
+        <a href="{{ path("editUsers",{'id':app.user.id}) }}"> <button> Edit </button> </a>
+        <hr>
         <u> Conference already voted </u>
         {% for conference in conferencevoted %}
             <li> {{ conference.name }}

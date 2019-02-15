@@ -45,6 +45,11 @@ class Conference
      * @ORM\ManyToMany(targetEntity="App\Entity\User", mappedBy="conference")
      */
     private $users;
+
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $description;
     Const NB_ETOILE =  5;
     Const NB_CONF_PER_PAGE = 5;
 
@@ -131,6 +136,18 @@ class Conference
             $this->users->removeElement($user);
             $user->removeConference($this);
         }
+
+        return $this;
+    }
+
+    public function getDescription(): ?string
+    {
+        return $this->description;
+    }
+
+    public function setDescription(?string $description): self
+    {
+        $this->description = $description;
 
         return $this;
     }

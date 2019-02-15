@@ -9,6 +9,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
+use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 
 class UserController extends AbstractController
 {
@@ -40,7 +41,7 @@ class UserController extends AbstractController
     /**
      * @Route("/user/add", name="addUsers")
      */
-    public function addUser(Request $request,UserManager $userManager,AuthorizationCheckerInterface $authChecker)
+    public function addUser(Request $request,UserManager $userManager, AuthorizationCheckerInterface $authChecker)
     {
 
         if (false === $authChecker->isGranted('ROLE_ADMIN')) {
@@ -66,7 +67,7 @@ class UserController extends AbstractController
     /**
      * @Route("/user/edit/{id}", name="editUsers")
      */
-    public function editUser(Request $request,UserManager $userManager,User $user)
+    public function editUser(Request $request,UserManager $userManager,User $user,UserPasswordEncoderInterface $passwordEncoder)
     {
 
 
@@ -75,11 +76,19 @@ class UserController extends AbstractController
 
         if($formAddUser->isSubmitted() &&  $formAddUser->isValid()){
 
+            $arrayDataUser = $request->request->get('user');
+
+            if($user->getPassword() === $arrayDataUser['password']){
+                $arrayDataUser['password'] = $passwordEncoder->encodePassword($user,$arrayDataUser['password']);
+                $user->setPassword($arrayDataUser['password']);
+            }
+
             $userManager->save($user);
         }
 
         return $this->render('user/editUser.html.twig', [
             'form' => $formAddUser->createView(),
+            'user' => $user,
         ]);
 
     }
