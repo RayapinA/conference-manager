@@ -49,7 +49,14 @@ To update the doctrine schema, make this command :
 ```bash
 php bin/console d:s:u --force
 ```
-
+Open the .env file and change this line for the SMTP server via Gmail
+```
+MAILER_URL=gmail://yourEmail@gmail.com:yourPassword@localhost
+```
+or a cloud service
+```
+MAILER_URL=smtp://localhost:25?encryption=&auth_mode=
+```
 
 Command to create a admin :  **app:create-admin**
 
