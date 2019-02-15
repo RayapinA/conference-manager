@@ -81,6 +81,7 @@ class SecurityController extends AbstractController
      */
     public function profile(ConferenceManager $conferenceManager)
     {
+        
         $conferenceVoted = array();
         $conferenceNoVoted = array();
 
@@ -97,8 +98,6 @@ class SecurityController extends AbstractController
                 array_push($conferenceNoVoted,$conference);
             }
         }
-        //dump($conferenceVoted);
-        //dump($conferenceNoVoted);
 
         return $this->render('security/profile.html.twig',[
             "conferencevoted" => $conferenceVoted,

@@ -1,0 +1,70 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Page de recherche  {% endblock %}
+
+{% block body %}
+
+
+    <div class="example-wrapper">
+
+        Search conference's Engine
+        <form id="form_recherche" action="{{ path('resultSearchConference') }}" method="post">
+
+
+            {{ form_label(form.name, 'Name of the conference: ') }}
+            {{ form_errors(form.name) }}
+            {{ form_widget(form.name, {'attr': {'class': 'inputField','id':'nameSearchConference'}}) }}
+            {{ form_help(form.name) }}
+
+            {{ form_widget(form.submit, {'attr': {'class': 'boutonSubmit'}}) }}
+
+        </form>
+
+        <div id="printResult"> </div>
+
+
+    </div>
+
+{% endblock %}
+
+{% block script_javascripts  %}
+    <script>
+
+        $("#form_recherche").submit(function(){
+           var nameSearched =  $("#search_conference_name").val();
+
+            var data = 'nameSearched=' + nameSearched;
+            $.ajax({
+                type: "POST",
+                url: "{{ path('resultSearchConference')}}",
+                data: data,
+                cache: false,
+                success: function(data){
+
+                    if(data.length > 0){
+                        //TODO: Faire le template dans le controlleur avec le service de Temaplating
+                        var affichage = "<hr>";
+                        affichage += "<table id='resultTable'>  <tr> <th> ID  </th>  <th> Name </th> </tr>";
+                        for (var prop in data) {
+
+                            affichage += "<tr> <td> " + data[prop].id + " </td>   <td> " + data[prop].name + " </td> </tr>";
+
+                        }
+                        affichage += "</table>";
+
+
+                        $("#printResult")[0].innerHTML = affichage;
+                    }else{
+                        $("#printResult")[0].innerHTML = "Sorry, no conference matching with the name you are looking for";
+                    }
+
+
+                    return false;
+                }
+            });
+            return false;
+        });
+
+
+    </script>
+{% endblock %}

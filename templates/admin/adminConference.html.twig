@@ -1,0 +1,31 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Admin Page Conference{% endblock %}
+
+{% block body %}
+
+    <div class="example-wrapper">
+        <h3> Conference's List : </h3>
+        <table>
+            <tr>
+                <th> Name </th>
+                <th> Place</th>
+                <th> Date </th>
+                <th> Action </th>
+            </tr>
+            {% for conference in conferences %}
+                <tr>
+                    <td> {{ conference.name }} </td>
+                    <td> {{ conference.place }} </td>
+                    <td> {{ conference.date | date("m/d/Y")  }}</td>
+                    <td><a href="{{ path("editConference",{'id':conference.id}) }}"> Edit </a></td>
+                </tr>
+
+
+
+
+
+            {% endfor %}
+        </table>
+    </div>
+{% endblock %}

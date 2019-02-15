@@ -1,14 +1,25 @@
 <nav class="navbar navbar-default">
     <div class="container-fluid">
         <a href="{{ path("home")}}"> Home </a>
-        <a href="{{ path("conferences")}}"> Conferences </a>
 
         {% if is_granted('IS_AUTHENTICATED_FULLY') %}
+            <a href="{{ path("conferencesVoted")}}"> Conferences voted </a>
+            <a href="{{ path("conferencesNoVoted")}}"> Conferences not voted </a>
 
-            <a href="{{ path("logout")}}"> logout </a>
+            {% if is_granted('ROLE_ADMIN') != false %}
+
+                <a href="{{ path("admin")}}"> Admin </a>
+
+            {% else %}
+
+                <a href="{{ path("profile")}}"> Profile </a>
+
+            {% endif %}
+
+            <a href="{{ path("logout")}}"> Logout </a>
 
         {% else %}
-
+            <a href="{{ path("conferences")}}"> Conferences </a>
             <a href="{{ path("login")}}"> Login </a>
             <a href="{{ path("register")}}"> Register </a>
 

@@ -4,12 +4,16 @@ namespace App\Controller;
 
 use App\Entity\Conference;
 use App\Form\ConferenceType;
+use App\Form\SearchConferenceType;
 use App\Manager\ConferenceManager;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
-class ConferenceController extends AbstractController
+//Controlleur deprecié mais j'ai besoin du service knp_paginator
+class ConferenceController extends Controller
 {
 
     /**
@@ -17,21 +21,28 @@ class ConferenceController extends AbstractController
      */
     public function index()
     {
-        return $this->render('conference/index.html.twig', [
-            'controller_name' => 'ConferenceController',
-        ]);
+        return $this->redirectToRoute('home');
+
     }
 
     /**
      * @Route("/conferences", name="conferences")
      */
-    public function showAllConference(ConferenceManager $conferenceManager)
+    public function showAllConference(ConferenceManager $conferenceManager, Request $request)
     {
-        $conferences = $conferenceManager->getAllConferences();
+        $conferencesQuery = $conferenceManager->getAllConferences();
+
+        $paginator = $this->get('knp_paginator');
+
+        $conferences = $paginator->paginate(
+            $conferencesQuery,
+            $request->query->getInt('page', 1),
+            Conference::NB_CONF_PER_PAGE
+        );
+
 
         return $this->render('conference/showAll.html.twig', [
             'conferences' => $conferences,
-            'NbEtoile' => conference::NB_ETOILE
         ]);
     }
     /**
@@ -41,7 +52,7 @@ class ConferenceController extends AbstractController
     {
         // Possibilité d'ajouter uniquement si l'utilisateur est connecté //Fonction a mettre en place // Logger la creation
 
-        //$this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
+        $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
 
         $conference = new Conference();
 
@@ -60,11 +71,14 @@ class ConferenceController extends AbstractController
     }
 
     /**
-     * @Route("/conference/edit/{id}", name="editVideo")
+     * @Route("/conference/edit/{id}", name="editConference")
      */
-    public function editConference(Request $request, ConferenceManager $conferenceManager, Conference $conference) //,  LoggerInterface $logger
+    public function editConference(Request $request, ConferenceManager $conferenceManager, Conference $conference, AuthorizationCheckerInterface $authChecker) //,  LoggerInterface $logger
     {
-        //$this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
+        //Seul l'admin peut modifier une conference ( pour la date & le lieu )
+        if (false === $authChecker->isGranted('ROLE_ADMIN')) {
+            return $this->redirectToRoute('home');
+        }
 
         $formEditConference = $this->createForm(ConferenceType::class,$conference);
         $formEditConference->handleRequest($request);
@@ -74,10 +88,10 @@ class ConferenceController extends AbstractController
 
             //$this->addFlash(
              //   'notice',
-               // 'Video Edited'
+               // 'Conference Edited'
           //  );
 
-//            $logger->info('Video Edited. idVideo = '.$video->getId().' title = '.$video->getTitle());
+//            $logger->info('Conference Edited);
         }
 
         return $this->render('conference/editConference.html.twig', [
@@ -89,7 +103,7 @@ class ConferenceController extends AbstractController
     /**
      * @Route("/conference/oneVote/{id}", name="oneVote")
      */
-    public function oneVote(Conference $conference,Request $request, ConferenceManager $conferenceManager)
+    public function oneVote(Conference $conference, Request $request, ConferenceManager $conferenceManager)
     {
 
         $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
@@ -97,6 +111,7 @@ class ConferenceController extends AbstractController
         $user = $this->getUser();
         $conferenceAlreadyVoted = $user->getIdConferenceVoted();
 
+        //Si un utilisateur a deja vote pour la conference en cours on le redirige vers son profil
         if(in_array($conference->getId(),$conferenceAlreadyVoted)){
 
             return $this->redirectToRoute('profile');
@@ -112,4 +127,89 @@ class ConferenceController extends AbstractController
 
         return $this->redirectToRoute('profile');
     }
+
+    /**
+     * @Route("/conference/conferencesVoted", name="conferencesVoted")
+     */
+    public function pageVoted(Request $request, ConferenceManager $conferenceManager)
+    {
+
+        $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
+
+        $conferencesQuery = $conferenceManager->getConferenceVotedByUser($this->getUser());
+
+        $paginator = $this->get('knp_paginator');
+
+        $conferences = $paginator->paginate(
+            $conferencesQuery,
+            $request->query->getInt('page', 1),
+            Conference::NB_CONF_PER_PAGE
+        );
+
+        return $this->render('conference/showAll.html.twig',[
+            "conferences" => $conferences
+        ]);
+    }
+
+    /**
+     * @Route("/conference/conferencesNoVoted", name="conferencesNoVoted")
+     */
+    public function pageNoVoted(ConferenceManager $conferenceManager, Request $request)
+    {
+
+        $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
+
+        $conferencesQuery = $conferenceManager->getConferenceNoVotedByUser($this->getUser());
+
+        $paginator = $this->get('knp_paginator');
+
+        $conferences = $paginator->paginate(
+            $conferencesQuery,
+            $request->query->getInt('page', 1),
+            Conference::NB_CONF_PER_PAGE
+        );
+
+        return $this->render('conference/showAll.html.twig',[
+            "conferences" => $conferences,
+            "NbEtoile" => conference::NB_ETOILE
+        ]);
+
+    }
+
+    /**
+     * @Route("/conference/search", name="searchConference")
+     */
+    public function searchConference(Request $request)
+    {
+
+        $conference = new Conference;
+
+        $formSearchConference = $this->createForm(SearchConferenceType::class,$conference);
+
+        return $this->render('conference/searchConference.html.twig', [
+            'form' => $formSearchConference->createView(),
+            "conference" => $conference
+        ]);
+    }
+
+
+    /**
+     * @Route("/conference/resultSearch", name="resultSearchConference")
+     */
+    public function resultSearchConference(Request $request, ConferenceManager $conferenceManager)
+    {
+        if($request->isXmlHttpRequest()){
+
+            $nameSearched = $request->request->get('nameSearched');
+
+            if($nameSearched == ""){
+                //securité supplémentaire
+                return $this->json(array());
+            }
+            $conferencesFind = $conferenceManager->getSearchResult($nameSearched);
+
+            return $this->json($conferencesFind);
+        }
+    }
+
 }

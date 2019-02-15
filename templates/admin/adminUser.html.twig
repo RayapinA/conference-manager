@@ -1,0 +1,31 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Admin Page User{% endblock %}
+
+{% block body %}
+
+    <div class="example-wrapper">
+        <h3> User's List : </h3>
+        <table>
+            <tr>
+            <th> Name </th>
+            <th> Firstname</th>
+            <th> Email</th>
+            <th> Action </th>
+            </tr>
+            {% for user in users %}
+                <tr>
+                    <td> {{ user.name }} </td>
+                    <td> {{ user.firstName }} </td>
+                    <td> {{ user.email }}</td>
+                    <td><a href="{{ path("editUsers",{'id':user.id}) }}"> Edit </a></td>
+                </tr>
+
+
+
+
+
+            {% endfor %}
+        </table>
+    </div>
+{% endblock %}

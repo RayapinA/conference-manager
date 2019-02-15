@@ -3,7 +3,7 @@
 {% block title %}Page Profile {% endblock %}
 {% block body %}
     <div class="example-wrapper">
-        Page Profile
+        <h3>Page Profile</h3>
 
         <ul>
             <li> FirstName :  {{app.user.firstName}} </li>
@@ -11,19 +11,20 @@
             <li> Email : {{app.user.email}} </li>
         </ul>
 
-        <u> Conference Already Voted </u>
+        <u> Conference already voted </u>
         {% for conference in conferencevoted %}
             <li> {{ conference.name }}
             </li>
         {% endfor %}
 
-        <u>Conference no Voted </u>
+        <u>Conference no voted </u>
 
         {% for conference in conferenceNoVoted %}
             <li> {{ conference.name }}
                 {% for i in 1 .. NbEtoile %}
 
                     <a href="{{ path("oneVote",{'id':conference.id,'nbre':i }) }}"> <i class="material-icons">star_border</i> </a>
+
                 {% endfor %}
             </li>
     {% endfor %}
