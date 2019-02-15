@@ -86,6 +86,8 @@ class ConferenceManager extends AbstractController
     }
 
 
+
+
     public function save(Conference $conference)
     {
         $this->conferenceDoctrine->persist($conference);

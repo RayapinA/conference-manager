@@ -19,15 +19,16 @@ class UserManager extends AbstractController
         $this->userDoctrine = $em;
     }
 
-    public function getAllUser(){
+    public function getAllUser()
+    {
 
         return $this->userRepository->findAll();
     }
 
-    public function save(User $user){
+    public function save(User $user)
+    {
 
         $this->userDoctrine->persist($user);
         $this->userDoctrine->flush();
     }
-
 }

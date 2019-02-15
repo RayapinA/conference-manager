@@ -14,12 +14,14 @@
                 .navbar .container-fluid a {margin:0px 20px;}
                 .listConference { margin:0px 40px; }
                 .listConference li { font-size: 25px;}
+                select { display:block !important;}
 
             </style>
 
         {% endblock %}
     </head>
     {% include('navbar.html.twig') %}
+    {% include 'flash_message.html.twig' %}
     <body>
         {% block body %}{% endblock %}
 

@@ -16,6 +16,7 @@ class ConferenceType extends AbstractType
         $builder
             ->add('name')
             ->add('place')
+            ->add('description')
             ->add('date',DateTimeType::class)
             ->add('submit',SubmitType::class)
         ;

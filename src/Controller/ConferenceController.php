@@ -6,6 +6,8 @@ use App\Entity\Conference;
 use App\Form\ConferenceType;
 use App\Form\SearchConferenceType;
 use App\Manager\ConferenceManager;
+use App\Manager\UserManager;
+use Psr\Log\LoggerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Routing\Annotation\Route;
@@ -22,7 +24,6 @@ class ConferenceController extends Controller
     public function index()
     {
         return $this->redirectToRoute('home');
-
     }
 
     /**
@@ -38,20 +39,18 @@ class ConferenceController extends Controller
             $conferencesQuery,
             $request->query->getInt('page', 1),
             Conference::NB_CONF_PER_PAGE
+
         );
-
-
         return $this->render('conference/showAll.html.twig', [
             'conferences' => $conferences,
+            "NbEtoile" => conference::NB_ETOILE,
         ]);
     }
     /**
      * @Route("/conference/add", name="addConferences")
      */
-    public function addConference(Request $request, ConferenceManager $conferenceManager) // LoggerInterface $logger
+    public function addConference(Request $request, ConferenceManager $conferenceManager, \Swift_Mailer $mailer, UserManager $userManager, LoggerInterface $logger)
     {
-        // Possibilité d'ajouter uniquement si l'utilisateur est connecté //Fonction a mettre en place // Logger la creation
-
         $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
 
         $conference = new Conference();
@@ -63,6 +62,25 @@ class ConferenceController extends Controller
 
             $conference->setVote(0);
             $conferenceManager->save($conference);
+
+            //TODO: enregistrer les donnes de cette ajout de conference
+            $logger->info(' Conference Added!!! ');
+            $this->addFlash('success', 'Conference created');
+
+            //ENVOI DES MAILS
+            $users = $userManager->getAllUser();
+            foreach($users as $user){
+
+                $message = (new \Swift_Message('New Conference '))
+                    ->setFrom('anoinegwada@gmail.com')
+                    ->setTo(trim($user->getEmail()))
+                    ->setBody("New conference",
+                        'text/html'
+                    );
+
+                $mailer->send($message);
+                $logger->info(' Emails send !! ');
+            }
         }
 
         return $this->render('conference/addConference.html.twig', [
@@ -73,7 +91,7 @@ class ConferenceController extends Controller
     /**
      * @Route("/conference/edit/{id}", name="editConference")
      */
-    public function editConference(Request $request, ConferenceManager $conferenceManager, Conference $conference, AuthorizationCheckerInterface $authChecker) //,  LoggerInterface $logger
+    public function editConference(Request $request, ConferenceManager $conferenceManager, Conference $conference, AuthorizationCheckerInterface $authChecker,LoggerInterface $logger) //,  LoggerInterface $logger
     {
         //Seul l'admin peut modifier une conference ( pour la date & le lieu )
         if (false === $authChecker->isGranted('ROLE_ADMIN')) {
@@ -86,12 +104,12 @@ class ConferenceController extends Controller
         if($formEditConference->isSubmitted() &&  $formEditConference->isValid()){
             $conferenceManager->save($conference);
 
-            //$this->addFlash(
-             //   'notice',
-               // 'Conference Edited'
-          //  );
-
-//            $logger->info('Conference Edited);
+            $this->addFlash(
+                'notice',
+                'Conference Edited'
+           );
+            //TODO: enregister les informations de cette conference
+           $logger->info('Conference Edited');
         }
 
         return $this->render('conference/editConference.html.twig', [
@@ -103,7 +121,7 @@ class ConferenceController extends Controller
     /**
      * @Route("/conference/oneVote/{id}", name="oneVote")
      */
-    public function oneVote(Conference $conference, Request $request, ConferenceManager $conferenceManager)
+    public function oneVote(Conference $conference, Request $request, ConferenceManager $conferenceManager,LoggerInterface $logger)
     {
 
         $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
@@ -124,6 +142,9 @@ class ConferenceController extends Controller
         $conference->addUser($user);
 
         $conferenceManager->save($conference);
+        $this->addFlash('success', 'Thanks for your vote ! and See you at the conference maybe');
+        //TODO:Enregistrer les infos de vote
+        $logger->info('One conference has got voted');
 
         return $this->redirectToRoute('profile');
     }

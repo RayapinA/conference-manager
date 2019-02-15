@@ -17,7 +17,8 @@ class SecurityManager extends AbstractController
         $this->securityDoctrine = $em;
     }
 
-    public function save(User $user){
+    public function save(User $user)
+    {
 
         $this->securityDoctrine->persist($user);
         $this->securityDoctrine->flush();

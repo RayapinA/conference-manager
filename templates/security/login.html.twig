@@ -9,7 +9,20 @@
         <h3> LOGIN </h3>
 
         {{ form_start(form) }}
-        {{ form_widget(form) }}
+
+        {{ form_label(form.email, 'Email : ') }}
+        {{ form_errors(form.email) }}
+        {{ form_widget(form.email, {'attr': {'class': 'inputField'}}) }}
+        {{ form_help(form.email) }}
+
+        {{ form_label(form.password, 'Password : ') }}
+        {{ form_errors(form.password) }}
+        {{ form_widget(form.password, {'attr': {'class': 'inputField'}}) }}
+        {{ form_help(form.password) }}
+
+        {{ form_widget(form.submit, {'attr': {'class': 'boutonSubmit'}}) }}
+
+
         {{ form_end(form) }}
 
     </div>
