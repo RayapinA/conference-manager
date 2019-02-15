@@ -24,7 +24,6 @@ class ConferenceController extends Controller
     public function index()
     {
         return $this->redirectToRoute('home');
-
     }
 
     /**
@@ -42,8 +41,6 @@ class ConferenceController extends Controller
             Conference::NB_CONF_PER_PAGE
 
         );
-
-
         return $this->render('conference/showAll.html.twig', [
             'conferences' => $conferences,
             "NbEtoile" => conference::NB_ETOILE,
@@ -54,8 +51,6 @@ class ConferenceController extends Controller
      */
     public function addConference(Request $request, ConferenceManager $conferenceManager, \Swift_Mailer $mailer, UserManager $userManager, LoggerInterface $logger)
     {
-        // Possibilité d'ajouter uniquement si l'utilisateur est connecté //Fonction a mettre en place // Logger la creation
-
         $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
 
         $conference = new Conference();
@@ -67,11 +62,12 @@ class ConferenceController extends Controller
 
             $conference->setVote(0);
             $conferenceManager->save($conference);
+
             //TODO: enregistrer les donnes de cette ajout de conference
             $logger->info(' Conference Added!!! ');
+            $this->addFlash('success', 'Conference created');
 
             //ENVOI DES MAILS
-            // J'ai utilisé Mailinator
             $users = $userManager->getAllUser();
             foreach($users as $user){
 
@@ -85,7 +81,6 @@ class ConferenceController extends Controller
                 $mailer->send($message);
                 $logger->info(' Emails send !! ');
             }
-
         }
 
         return $this->render('conference/addConference.html.twig', [

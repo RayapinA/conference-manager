@@ -26,7 +26,7 @@ class UserController extends AbstractController
      */
     public function showAllUsers(UserManager $userManager,AuthorizationCheckerInterface $authChecker)
     {
-
+        //Pour l'instant, seul un admin peut voir la liste des Users // a modifier pour une meilleure contribution collaborative
         if (false === $authChecker->isGranted('ROLE_ADMIN')) {
             return $this->redirectToRoute('home');
         }
@@ -72,8 +72,6 @@ class UserController extends AbstractController
      */
     public function editUser(Request $request,UserManager $userManager,User $user,UserPasswordEncoderInterface $passwordEncoder,LoggerInterface $logger)
     {
-
-
         $formAddUser = $this->createForm(UserType::class,$user);
         $formAddUser->handleRequest($request);
 
@@ -88,10 +86,7 @@ class UserController extends AbstractController
 
             $userManager->save($user);
             $this->addFlash('success', 'User edited');
-            $this->addFlash(
-                'success',
-                'Erreur de connexion'
-            );
+
             //TODO: enregistrer les infos
             $logger->info(' User Edited!!! ');
 
